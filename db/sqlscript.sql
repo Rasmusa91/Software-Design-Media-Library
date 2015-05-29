@@ -1,0 +1,62 @@
+DROP TABLE IF EXISTS Media;
+CREATE TABLE Media(
+    id 		INTEGER UNIQUE PRIMARY KEY,
+    name 	VARCHAR(80) NOT NULL,
+    price 	FLOAT NOT NULL,
+    amount 	INTEGER NOT NULL,
+    status 	INTEGER NOT NULL,
+    mediaType 	INTEGER NOT NULL
+);
+
+DROP TABLE IF EXISTS Users;
+CREATE TABLE Users(
+    id 			INTEGER UNIQUE PRIMARY KEY,
+    name		VARCHAR(80) NOT NULL,
+    pw			TEXT NOT NULL,
+    isStaff		BOOLEAN NOT NULL,
+    accountBalance 	FLOAT NOT NULL
+);
+
+DROP TABLE IF EXISTS Transactions;
+CREATE TABLE Transactions(
+    id 			INTEGER UNIQUE PRIMARY KEY,
+    userId		INTEGER NOT NULL,
+    amount		FLOAT NOT NULL,
+    transactionDate	DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(userId) REFERENCES Users(id)
+);
+
+DROP TABLE IF EXISTS RentedMedia;
+CREATE TABLE RentedMedia(
+    id 			INTEGER UNIQUE PRIMARY KEY,
+    userId		INTEGER NOT NULL,
+    mediaId		INTEGER NOT NULL,
+    expirationDate	DATETIME NOT NULL,
+
+    FOREIGN KEY(userId) REFERENCES Users(id),
+    FOREIGN KEY(mediaId) REFERENCES Media(id)
+);
+
+DROP TABLE IF EXISTS Tickets;
+CREATE TABLE Tickets(
+    id 			INTEGER UNIQUE PRIMARY KEY,
+    customerId  	INTEGER NOT NULL,
+    customerMessage	TEXT NOT NULL,
+    staffId		INTEGER,
+    staffMessage	TEXT,
+
+    FOREIGN KEY(customerId) REFERENCES Users(id),
+    FOREIGN KEY(staffId) REFERENCES Users(id)
+);
+
+DROP TABLE IF EXISTS RentalQueue;
+CREATE TABLE RentalQueue(
+    id 			INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT,
+    customerId  	INTEGER NOT NULL,
+    mediaId		INTEGER NOT NULL,
+    addedDate		DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(customerId) REFERENCES Users(id),
+    FOREIGN KEY(mediaId) REFERENCES Media(id)
+);

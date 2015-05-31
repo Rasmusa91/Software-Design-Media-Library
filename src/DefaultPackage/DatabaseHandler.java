@@ -13,7 +13,7 @@ public class DatabaseHandler
     public static String executeQuery(String query){
 	try{
 	    Class.forName("org.sqlite.JDBC");
-	    Connection connection = DriverManager.getConnection("jdbc:sqlite:../db/database.db");
+	    Connection connection = DriverManager.getConnection("jdbc:sqlite:db/database.db");
 	    Statement stmt = connection.createStatement();
 
 	    stmt.executeUpdate(query);
@@ -29,7 +29,7 @@ public class DatabaseHandler
     public static ArrayList<HashMap<String, Object>> executeQueryAndFetch(String query){
     	try{
 		    Class.forName("org.sqlite.JDBC");
-		    Connection connection = DriverManager.getConnection("jdbc:sqlite:../db/database.db");
+		    Connection connection = DriverManager.getConnection("jdbc:sqlite:db/database.db");
 		    Statement stmt = connection.createStatement();
 	
 		    ResultSet rs = stmt.executeQuery(query);

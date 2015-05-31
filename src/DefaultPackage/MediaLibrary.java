@@ -1,9 +1,11 @@
 package DefaultPackage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import UserPackage.*;
 import GUIPackage.GUI;
+import GUIPackage.IGUICallback;
 import MediaPackage.*;
 import TicketPackage.*;
 import StatisticsPackage.*;
@@ -20,26 +22,68 @@ public class MediaLibrary
 	{
 		DatabaseHandler.checkRentedMediaAndQueues();
 		initialize();
+		HashMap<String, Observable> observableList = new HashMap<String, Observable>();
+		observableList.put("userHandler", userHandler);
+		observableList.put("mediaHandler", mediaHandler);
+		observableList.put("ticketHandler", ticketHandler);
+		observableList.put("statisticsHandler", statisticsHandler);
 		
-		login("asd", "asd2");
-		//login("Oliver", "CoolOliver"); // STAFF
-		
-		//rentMedia(new Media("2", "asd", 100f, 10, MediaStatus.InStock, new ArrayList<String>()));
-		//System.out.println(userHandler.getClass().toString());
-		//System.out.println(addMedia("b", 0f, 10, MediaStatus.InStock, MediaType.AudioBook));
-		
-		
-		//addFunds(1000, new String[] {});
-		
-		
-		//addTicket("helo");
-		//addCustomerToQueue(new Media("1", "asd", 0f, 10, MediaStatus.InStock, new ArrayList<String>()));
+		gui = new GUI(new IGUICallback() {
+			
+			@Override
+			public boolean onSubmitTicket(String message) {
+				return submitTicket(message);
+			}
+			
+			@Override
+			public boolean onSignup(String name, String password) {
+				return signup(name, password);
+			}
+			
+			@Override
+			public boolean onRentMedia(Media media) {
+				return rentMedia(media);
+			}
+			
+			@Override
+			public boolean onProcessTicket(Ticket ticket, String message) {
+				return processTicket(ticket, message);
+			}
+			
+			@Override
+			public boolean onLogout() {
+				return logout();
+			}
+			
+			@Override
+			public boolean onLogin(String name, String password) {
+				return login(name, password);
+			}
+			
+			@Override
+			public boolean onEditMedia(Media media, String name, float price, int amount, MediaStatus status, MediaType type) {
+				return editMedia(media, name, price, amount, status, type);
+			}
+			
+			@Override
+			public boolean onAddMedia(String name, float price, int amount, MediaStatus status, MediaType type) {
+				return addMedia(name, price, amount, status, type);
+			}
+			
+			@Override
+			public boolean onAddFunds(float amount, String[] credentials) {
+				return addFunds(amount, credentials);
+			}
+			
+			@Override
+			public boolean onAddCustomerToQueue(Media media) {
+				return addCustomerToQueue(media);
+			}
+		}, observableList);
 	}
 	
 	private void initialize()
 	{
-		gui = new GUI();
-		
 		userHandler = new UserHandlerStateNone(new IUserHandlerStateChangeCallback() {
 			@Override
 			public void stateChange(UserHandlerState handler) {
@@ -79,6 +123,7 @@ public class MediaLibrary
 			}
 		});
 		userHandler.addObserver(statisticsHandler);	
+		
 	}
 	
 	public boolean login(String name, String password)

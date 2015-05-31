@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package DefaultPackage;
 
 import java.sql.*;
@@ -7,13 +8,21 @@ import java.util.Date;
 
 import MediaPackage.Media;
 import MediaPackage.MediaStatus;
+=======
+import java.sql.*;
+import java.util.*;
+>>>>>>> 4b8ed213254b87896e6ae74681fb7ba8b31ddc84
 
 public class DatabaseHandler
 {
     public static String executeQuery(String query){
 	try{
 	    Class.forName("org.sqlite.JDBC");
+<<<<<<< HEAD
 	    Connection connection = DriverManager.getConnection("jdbc:sqlite:../db/database.db");
+=======
+	    Connection connection = DriverManager.GetConnection("jdbc:sqlite:database.db");
+>>>>>>> 4b8ed213254b87896e6ae74681fb7ba8b31ddc84
 	    Statement stmt = connection.createStatement();
 
 	    stmt.executeUpdate(query);
@@ -26,6 +35,7 @@ public class DatabaseHandler
 	}
     }
 
+<<<<<<< HEAD
     public static ArrayList<HashMap<String, Object>> executeQueryAndFetch(String query){
     	try{
 		    Class.forName("org.sqlite.JDBC");
@@ -136,4 +146,29 @@ public class DatabaseHandler
 			}
 		}		
 	} 
+=======
+    public static ArrayList<Object> executeQueryAndFetch(String query){
+	try{
+	    Class.forName("org.sqlite.JDBC");
+	    Connection connection = DriverManager.GetConnection("jdbc:sqlite:database.db");
+	    Statement stmt = connection.createStatement();
+
+	    ResultSet rs = stmt.executeQuery(query);
+
+	    ArrayList<Object> objectList = new ArrayList<Object>();
+	    int columns = rs.getMetaData().getColumnCount();
+	    while(rs.next()){
+		for(int i = 0; i < columns; i++){
+		    objectList.add(rs.getObject(i));
+		}
+	    }
+	    stmt.close();
+	    connection.close();
+	    return objectList;
+	}catch(Exception e){
+	    System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+	    return null;
+	}
+    }
+>>>>>>> 4b8ed213254b87896e6ae74681fb7ba8b31ddc84
 }

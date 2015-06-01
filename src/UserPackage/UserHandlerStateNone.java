@@ -19,6 +19,10 @@ public class UserHandlerStateNone extends UserHandlerState
 		
 		ArrayList<HashMap<String, Object>> result = DatabaseHandler.executeQueryAndFetch("SELECT * FROM Users "
 				+ "WHERE name = '" + name + "' AND pw = '" + password + "'");
+		//FIXME snygga till mig
+		if(result.isEmpty()) {
+			return false;
+		}
 		HashMap<String, Object> data = result.get(0);
 
 		if(((String) data.get("isStaff")).equals("true")) 
@@ -54,8 +58,7 @@ public class UserHandlerStateNone extends UserHandlerState
 					+ "VALUES ('" + name +  "', '" + password + "', 'false', 0)");
 					
 			
-			
-			success = login(name, password);
+			success = true;
 		}
 		
 		return success;

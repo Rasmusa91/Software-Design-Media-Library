@@ -18,5 +18,6 @@ public class StatisticsHandlerStateStaff extends StatisticsHandlerState {
 		ArrayList<HashMap<String, Object>> result = DatabaseHandler.executeQueryAndFetch("SELECT * FROM Transactions");
 		
 		initializeTransactions(result);
+		
 	}	
 }

@@ -3,19 +3,45 @@ import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import DefaultPackage.IObserver;
+import DefaultPackage.Observable;
+import StatisticsPackage.Transaction;
+
 
 @SuppressWarnings("serial")
-public class GUIAccountStaffFinancialStatisticsView extends JPanel {
+public class GUIAccountStaffFinancialStatisticsView extends JPanel implements IObserver {
 	
 	private class LabelMouseAdapter extends MouseAdapter {
 		
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
+			String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"};
+			int monthNr = 1;
+			float monthSum = 0;
 			System.out.println(((JLabel)arg0.getSource()).getText());
+			for(int i = 0; i < 12; i++) {
+				String month = "<html><u>" + months[i] + "</u></html>";
+				if(((JLabel)arg0.getSource()).getText().equals(month)) {
+					monthNr += i;
+					break;
+				}
+			}
+			SimpleDateFormat dateFormat = new SimpleDateFormat("MM");
+			for (Transaction transaction : transactions) {
+				System.out.println(transaction.toString());
+				if(Integer.valueOf(dateFormat.format(transaction.getDate())) == monthNr) {
+					monthSum += transaction.getValue();
+				}
+			}
+			sum.setText("Total Sum: " + String.valueOf(monthSum) + ":-");
+			
 		}
 	}
 	
@@ -23,10 +49,14 @@ public class GUIAccountStaffFinancialStatisticsView extends JPanel {
 	private JLabel year;
 	private JLabel sum;
 	private JPanel monthspanel;
+	private ArrayList<Transaction> transactions;
 	
-	public GUIAccountStaffFinancialStatisticsView() {
+	public GUIAccountStaffFinancialStatisticsView(HashMap<String, Observable> observableList) {
 		setBounds(0,0,654,471);
 		setLayout(null);
+		
+		observableList.get("statisticsHandler").addObserver(this);
+		//statisticsHandler.addObserver(this);
 		
 		financial = new JLabel("Financial Statistics");
 		financial.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -37,8 +67,8 @@ public class GUIAccountStaffFinancialStatisticsView extends JPanel {
 		year.setBounds(10, 45, 46, 14);
 		add(year);
 		
-		sum = new JLabel("Total Sum: 2000:-");
-		sum.setBounds(10, 105, 100, 14);
+		sum = new JLabel("Press a month to see the total sum of that month.");
+		sum.setBounds(10, 105, 500, 14);
 		add(sum);
 		
 		monthspanel = new JPanel();
@@ -64,6 +94,14 @@ public class GUIAccountStaffFinancialStatisticsView extends JPanel {
 				monthspanel.add(divider);
 			}
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void Update(Object object) {
+		
+		transactions = (ArrayList<Transaction>) object;
+		System.out.println(transactions.toString());
 	}
 
 }

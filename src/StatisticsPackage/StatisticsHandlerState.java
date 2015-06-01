@@ -46,11 +46,18 @@ public abstract class StatisticsHandlerState extends Observable implements IObse
 			
 			transactions.add(new Transaction(id, customerId, type, value, date));
 		}
+		notifyObservers(transactions);
 	}
 	
 	public boolean addTransaction(TransactionType type, float value)
 	{
 		return false;
+	}
+	
+	@Override
+	public void addObserver(IObserver observer) {
+		observers.add(observer);
+		observer.Update(transactions);
 	}
 	
 	@Override
@@ -72,6 +79,7 @@ public abstract class StatisticsHandlerState extends Observable implements IObse
 		handler.setUser(user);
 		handler.initialize();
 		stateChangeCallback.stateChange(handler);
+		
 	}
 	
 	private void setUser(User user)

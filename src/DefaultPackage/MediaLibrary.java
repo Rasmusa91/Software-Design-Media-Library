@@ -17,12 +17,13 @@ public class MediaLibrary
 	private MediaHandlerState mediaHandler;
 	private TicketHandlerState ticketHandler;
 	private StatisticsHandlerState statisticsHandler;
+	private HashMap<String, Observable> observableList;
 	
 	public MediaLibrary()
 	{
 		DatabaseHandler.checkRentedMediaAndQueues();
+		observableList = new HashMap<String, Observable>();
 		initialize();
-		HashMap<String, Observable> observableList = new HashMap<String, Observable>();
 		observableList.put("userHandler", userHandler);
 		observableList.put("mediaHandler", mediaHandler);
 		observableList.put("ticketHandler", ticketHandler);
@@ -87,17 +88,17 @@ public class MediaLibrary
 		userHandler = new UserHandlerStateNone(new IUserHandlerStateChangeCallback() {
 			@Override
 			public void stateChange(UserHandlerState handler) {
-				userHandler = handler;				
+				userHandler = handler;	
+				observableList.put("userHandler", handler);
 			}
 		});
 		
 		mediaHandler = new MediaHandlerStateNone(new IMediaHandlerStateChangeCallback() {
 			@Override
 			public void stateChange(MediaHandlerState handler) {
-				userHandler.removeObserver(mediaHandler);
-				userHandler.addObserver(handler);
-
+				userHandler.updateReference(handler, mediaHandler);
 				mediaHandler = handler;
+				observableList.put("mediaHandler", handler);
 			}
 		}, true);
 		userHandler.addObserver(mediaHandler);
@@ -105,10 +106,9 @@ public class MediaLibrary
 		ticketHandler = new TicketHandlerStateNone(new ITicketHandlerStateChangeCallback() {
 			@Override
 			public void stateChange(TicketHandlerState handler) {
-				userHandler.removeObserver(ticketHandler);
-				userHandler.addObserver(handler);
-
+				userHandler.updateReference(handler, ticketHandler);
 				ticketHandler = handler;
+				observableList.put("ticketHandler", handler);
 			}
 		});
 		userHandler.addObserver(ticketHandler);
@@ -116,10 +116,9 @@ public class MediaLibrary
 		statisticsHandler = new StatisticsHandlerStateNone(new IStatisticsHandlerStateChangeCallback() {
 			@Override
 			public void stateChange(StatisticsHandlerState handler) {
-				userHandler.removeObserver(statisticsHandler);
-				userHandler.addObserver(handler);
-
+				userHandler.updateReference(handler, statisticsHandler);
 				statisticsHandler = handler;
+				observableList.put("statisticsHandler", handler);
 			}
 		});
 		userHandler.addObserver(statisticsHandler);	

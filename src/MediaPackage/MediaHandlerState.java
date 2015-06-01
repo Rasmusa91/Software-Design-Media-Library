@@ -72,11 +72,6 @@ public abstract class MediaHandlerState extends Observable implements IObserver
 		return false;
 	}
 	
-	public boolean addUserToQueue()
-	{
-		return false;
-	}
-
 	public boolean addMediaItem(String name, float price, int amount, MediaStatus status, MediaType type)
 	{
 		return false;
@@ -92,6 +87,14 @@ public abstract class MediaHandlerState extends Observable implements IObserver
 		return false;
 	}
 	
+	
+	
+	@Override
+	public void addObserver(IObserver observer) {
+		observers.add(observer);
+		observer.Update(media);
+	}
+
 	@Override
 	public void Update(Object object) 
 	{

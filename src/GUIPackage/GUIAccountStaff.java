@@ -4,10 +4,13 @@ import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.MatteBorder;
+
+import DefaultPackage.Observable;
 
 @SuppressWarnings("serial")
 public class GUIAccountStaff extends JPanel {
@@ -39,7 +42,7 @@ public class GUIAccountStaff extends JPanel {
 	private GUIAccountStaffFinancialStatisticsView statsView;
 	private GUIAccountStaffProcessTicketsView processView;
 	
-	public GUIAccountStaff() {
+	public GUIAccountStaff(HashMap<String, Observable> observableList) {
 		setBounds(0, 0, 844, 561);
 		setLayout(null);
 		
@@ -90,7 +93,7 @@ public class GUIAccountStaff extends JPanel {
 		});
 		addmediaView.setLocation(190, 40);
 		
-		statsView = new GUIAccountStaffFinancialStatisticsView();
+		statsView = new GUIAccountStaffFinancialStatisticsView(observableList);
 		statsView.setLocation(190, 40);
 		
 		processView = new GUIAccountStaffProcessTicketsView(new GUIAccountStaffProcessTicketsView.IProcessTicketCallback() {

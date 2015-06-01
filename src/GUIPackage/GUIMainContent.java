@@ -1,19 +1,28 @@
 package GUIPackage;
+import java.util.HashMap;
+
 import javax.swing.JPanel;
+
+import DefaultPackage.Observable;
 
 
 @SuppressWarnings("serial")
 public class GUIMainContent extends JPanel {
-	
+	public interface IMainCallback {
+		public boolean onLogin(String name, String pw);
+		public boolean onRegister(String name, String pw);
+	}
 	private GUILibraryView libraryView;
 	private GUIAccountView accountView;
 	private JPanel contentView;
 	private GUILogin.ILoginCallback loginCallback;
 	private GUILibraryView.IOnSelectCallback libraryCallback;
+	private IMainCallback mainCallback;
 	
-	public GUIMainContent() {
+	public GUIMainContent(IMainCallback callback, HashMap<String, Observable> observableList) {
 		setBounds(0, 0, 860, 550);
 		setLayout(null);
+		mainCallback = callback;
 		libraryCallback = new GUILibraryView.IOnSelectCallback() {
 			
 			@Override
@@ -25,19 +34,18 @@ public class GUIMainContent extends JPanel {
 		libraryView = new GUILibraryView(libraryCallback, null);
 		libraryView.setLocation(0, 0);
 		
-		accountView = new GUIAccountView();
+		accountView = new GUIAccountView(observableList);
 		accountView.setLocation(0, 0);
 		
 		loginCallback = new GUILogin.ILoginCallback() {
 			
 			@Override
 			public boolean login(String name, String pw) {
-				if(name.equals("jesper") && pw.equals("j")) {
+				boolean result = mainCallback.onLogin(name, pw);
+				if(result) {
 					changeView(accountView);
-					return true;
 				}
-				return false;
-				
+				return result;
 			}
 		};
 		
@@ -54,10 +62,11 @@ public class GUIMainContent extends JPanel {
 			
 			@Override
 			public boolean register(String name, String pw) {
-				if(!name.equals("jesper")) {
-					return true;
+				boolean result = mainCallback.onRegister(name, pw);
+				if(result) {
+					loginCallback.login(name, pw);
 				}
-				return false;
+				return result;
 			}
 		}));
 	}

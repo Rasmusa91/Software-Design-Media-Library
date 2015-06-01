@@ -49,4 +49,10 @@ public abstract class UserHandlerState extends Observable
 		notifyObservers(user);
 		userHandlerState.setObserverList(observers);
 	}
+	
+	@Override
+	public void addObserver(IObserver observer) {
+		observers.add(observer);
+		observer.Update(user);
+	}
 }

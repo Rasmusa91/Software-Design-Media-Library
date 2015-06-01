@@ -36,8 +36,8 @@ public class GUI extends JFrame {
 			
 			@Override
 			public void logoutCallback() {
-				// TODO Auto-generated method stub
-				
+				guiCallback.onLogout();
+				mainView.showLibrary(null);
 			}
 			
 			@Override
@@ -54,11 +54,27 @@ public class GUI extends JFrame {
 			public void searchCallback(String searchterm) {
 				mainView.showLibrary(searchterm);
 			}
-		});
+
+			@Override
+			public void accountCallback() {
+				mainView.showAccount();
+				
+			}
+		}, observableList.get("userHandler"));
 		topView.setLocation(0, 0);
 		contentPane.add(topView);
 		
-		mainView = new GUIMainContent();
+		mainView = new GUIMainContent(new GUIMainContent.IMainCallback() {
+			@Override
+			public boolean onLogin(String name, String pw) {
+				return guiCallback.onLogin(name, pw);
+			}
+
+			@Override
+			public boolean onRegister(String name, String pw) {
+				return guiCallback.onSignup(name, pw);
+			}
+		}, observableList);
 		mainView.setLocation(0, 50);
 		contentPane.add(mainView);
 		

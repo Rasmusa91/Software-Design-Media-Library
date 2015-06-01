@@ -8,15 +8,20 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.*;
 
+import UserPackage.User;
+import DefaultPackage.IObserver;
+import DefaultPackage.Observable;
+
 
 @SuppressWarnings("serial")
-public class GUITopView extends JPanel {
+public class GUITopView extends JPanel implements IObserver {
 
 	public interface ISelectedCallback {
 		public void loginCallback();
 		public void logoutCallback();
 		public void registerCallback();
 		public void libraryCallback();
+		public void accountCallback();
 		public void searchCallback(String searchterm);
 	}
 	
@@ -32,6 +37,8 @@ public class GUITopView extends JPanel {
 				callback.registerCallback();
 			} else if(((JLabel)arg0.getSource()).getText() == "<html><u>Library</u></html>") {
 				callback.libraryCallback();
+			} else if(((JLabel)arg0.getSource()).getText() == "<html><u>Account</u></html>") {
+				callback.accountCallback();
 			}
 		}
 	}
@@ -56,7 +63,7 @@ public class GUITopView extends JPanel {
 	
 	private ISelectedCallback callback;
 	
-	public GUITopView(ISelectedCallback callback) {
+	public GUITopView(ISelectedCallback callback, Observable userHandler) {
 		setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
 		setBounds(0, 0, 860, 50);
 		setLayout(null);
@@ -93,6 +100,23 @@ public class GUITopView extends JPanel {
 		label2.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		label2.addMouseListener(mouseAdapter);
 		add(label2);
+		
+		userHandler.addObserver(this);
 			
+	}
+
+	@Override
+	public void Update(Object object) {
+		if(object != null) {
+			label1.setText("<html><u>Account</u></html>");
+			label1.setBounds(720, 18, 57, 14);
+			label2.setText("<html><u>Logout</u></html>");
+			label2.setBounds(786, 18, 50, 14);
+		} else {
+			label1.setText("<html><u>Login</u></html>");
+			label1.setBounds(720, 18, 45, 14);
+			label2.setText("<html><u>Register</u></html>");
+			label2.setBounds(776, 18, 50, 14);
+		}
 	}
 }

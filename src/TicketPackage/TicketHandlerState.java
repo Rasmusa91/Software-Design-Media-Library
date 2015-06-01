@@ -53,6 +53,12 @@ public abstract class TicketHandlerState extends Observable implements IObserver
 	}
 	
 	@Override
+	public void addObserver(IObserver observer) {
+		observers.add(observer);
+		observer.Update(tickets);
+	}
+	
+	@Override
 	public void Update(Object object) 
 	{
 		user = (User) object;

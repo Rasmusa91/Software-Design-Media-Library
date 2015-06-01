@@ -1,4 +1,5 @@
 package GUIPackage;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,7 +18,11 @@ public class GUILibrarySingle extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			rentCallback.onRent(thisMedia);
+			if(rentCallback.onRent(thisMedia)) {
+				error.setText("");
+			} else {
+				error.setText("Renting failed.");
+			}
 		}
 		
 	}
@@ -31,6 +36,7 @@ public class GUILibrarySingle extends JPanel {
 	private JLabel amount;
 	private JLabel price;
 	private JLabel type;
+	private JLabel error;
 	
 	private Media thisMedia;
 	
@@ -75,6 +81,12 @@ public class GUILibrarySingle extends JPanel {
 			queue.addActionListener(rentListener);
 			add(queue);
 		}
+		
+		error = new JLabel();
+		error.setForeground(Color.RED);
+		error.setBounds(10, 190, 150, 25);
+		add(error);
+		
 		
 	}
 }

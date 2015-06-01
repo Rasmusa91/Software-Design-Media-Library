@@ -62,11 +62,6 @@ public class MediaLibrary
 			}
 			
 			@Override
-			public boolean onEditMedia(Media media, String name, float price, int amount, MediaStatus status, MediaType type) {
-				return editMedia(media, name, price, amount, status, type);
-			}
-			
-			@Override
 			public boolean onAddMedia(String name, float price, int amount, MediaStatus status, MediaType type) {
 				return addMedia(name, price, amount, status, type);
 			}
@@ -76,10 +71,6 @@ public class MediaLibrary
 				return addFunds(amount, credentials);
 			}
 			
-			@Override
-			public boolean onAddCustomerToQueue(Media media) {
-				return addCustomerToQueue(media);
-			}
 		}, observableList);
 	}
 	

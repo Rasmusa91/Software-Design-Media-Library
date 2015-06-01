@@ -109,7 +109,6 @@ public class GUIMainContent extends JPanel {
 	}
 	
 	private void changeView(JPanel newView) {
-		
 		remove(contentView);
 		contentView = newView;
 		add(newView);

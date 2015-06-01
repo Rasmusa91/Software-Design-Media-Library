@@ -13,7 +13,5 @@ public interface IGUICallback {
 	public boolean onSubmitTicket(String message);
 	public boolean onProcessTicket(Ticket ticket, String message);
 	public boolean onAddMedia(String name, float price, int amount, MediaStatus status, MediaType type);
-	public boolean onEditMedia(Media media, String name, float price, int amount, MediaStatus status, MediaType type);
 	public boolean onRentMedia(Media media);
-	public boolean onAddCustomerToQueue(Media media);
 }

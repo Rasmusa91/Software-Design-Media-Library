@@ -186,7 +186,7 @@ public class GUIAccountCustomer extends JPanel implements IObserver {
 
 	@Override
 	public void Update(Object object) {
-		if(object instanceof User) {
+		if(object instanceof Customer) {
 			user = (Customer) object;
 			balance.setText("Balance: " + String.valueOf(user.getBalance()) + ":-");
 			queuedView.updateMedia(media, user);

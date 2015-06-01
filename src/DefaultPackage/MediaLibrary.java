@@ -180,6 +180,7 @@ public class MediaLibrary
 		boolean success = mediaHandler.rent(media);
 		
 		if(success) {
+			userHandler.editBalance(media.getPrice() * -1);
 			statisticsHandler.addTransaction(TransactionType.Withdrawal, media.getPrice());
 		}
 		

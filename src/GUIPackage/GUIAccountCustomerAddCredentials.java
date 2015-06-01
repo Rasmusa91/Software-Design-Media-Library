@@ -33,9 +33,7 @@ public class GUIAccountCustomerAddCredentials extends JPanel {
 			} else {
 				error.setText("Empty fields not allowed.");
 			}
-			
 		}
-		
 	}
 	
 	public interface IAddCredentialsCallback{

@@ -39,7 +39,8 @@ public abstract class TicketHandlerState extends Observable implements IObserver
 			}
 			
 			tickets.add(newTicket);
-		}		
+		}
+		notifyObservers(tickets);
 	}
 	
 	public boolean addTicket(String message)
@@ -75,6 +76,7 @@ public abstract class TicketHandlerState extends Observable implements IObserver
 		}
 
 		handler.setUser(user);
+		handler.setObserverList(observers);
 		handler.initialize();
 		stateChangeCallback.stateChange(handler);
 	}

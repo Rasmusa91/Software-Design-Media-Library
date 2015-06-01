@@ -47,7 +47,11 @@ public class GUITopView extends JPanel implements IObserver {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			callback.searchCallback(searchField.getText());
+			if(searchField.getText().isEmpty()) {
+				callback.searchCallback(null);
+			} else {
+				callback.searchCallback(searchField.getText());
+			}
 		}
 		
 	}
@@ -56,10 +60,6 @@ public class GUITopView extends JPanel implements IObserver {
 	private JLabel library;
 	private JLabel label1;
 	private JLabel label2;
-	
-	/*private JPanel contentView;
-	private GUILogin loginView;
-	private GUIRegister registerView;*/
 	
 	private ISelectedCallback callback;
 	

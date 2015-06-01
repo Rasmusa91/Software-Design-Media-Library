@@ -21,9 +21,8 @@ public abstract class Observable
 	
 	public void notifyObservers(Object object)
 	{
-		for (IObserver observer : observers) {
-			observer.Update(object);
-			System.out.println(observer.getClass().toString());
+		for(int i = 0; i < observers.size(); i++){
+			observers.get(i).Update(object);
 		}
 	}
 	

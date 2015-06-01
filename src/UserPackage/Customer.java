@@ -15,13 +15,6 @@ public class Customer extends User
 		this.balance = balance;
 		
 		rentedMedia = new ArrayList<RentedMedia>();
-		
-		initialize();
-	}
-	
-	private void initialize()
-	{
-		//TODO
 	}
 
 	@Override

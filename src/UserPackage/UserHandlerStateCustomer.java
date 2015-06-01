@@ -10,12 +10,6 @@ public class UserHandlerStateCustomer extends UserHandlerState
 	}
 	
 	@Override
-	protected void initialize()
-	{
-		
-	}
-	
-	@Override
 	public boolean logout() 
 	{
 		user = null;
@@ -35,6 +29,7 @@ public class UserHandlerStateCustomer extends UserHandlerState
 				+ "SET accountBalance = '" + customer.getBalance() + "' "
 				+ "WHERE id = '" + customer.getId() + "'");
 		
+		notifyObservers(customer);
 		return true;
 	}	
 }

@@ -2,12 +2,15 @@ package GUIPackage;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
+import MediaPackage.Media;
 
 
 public class GUILibraryOverview extends JPanel {
@@ -17,14 +20,13 @@ public class GUILibraryOverview extends JPanel {
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
 			if(arg0.getClickCount() == 2) {
-				System.out.println(mediaList.getSelectedValue());
-				selectCallback.onSelectCallback(mediaList.getSelectedValue());
+				selectCallback.onSelectCallback(mediaList.getSelectedIndex());
 			}
 		}
 	}
 	
 	public interface IOnSelectCallback {
-		public void onSelectCallback(String id);
+		public void onSelectCallback(int i);
 	}
 	
 	private JLabel topLabel;
@@ -54,5 +56,17 @@ public class GUILibraryOverview extends JPanel {
 		scroll = new JScrollPane(mediaList);
 		scroll.setBounds(10, 50, 824, 446);
 		add(scroll);
+	}
+	
+	public void update(ArrayList<Media> media, String searchterm) {
+		mediaData.clear();
+		for (Media m : media) {
+			mediaData.add(m.getName());
+		}
+		if(searchterm != null) {
+			topLabel.setText("Library - Search results for \""+ searchterm +"\"");
+		} else {
+			topLabel.setText("Library");
+		}
 	}
 }

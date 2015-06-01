@@ -4,13 +4,25 @@ import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.MatteBorder;
 
+import MediaPackage.Media;
+import UserPackage.Customer;
+import UserPackage.User;
+import DefaultPackage.IObserver;
+import DefaultPackage.Observable;
 
-public class GUIAccountCustomer extends JPanel {
+
+public class GUIAccountCustomer extends JPanel implements IObserver {
+	
+	public interface IAccountCustomerCallback {
+		public boolean onAddBalance(float amount, String[] credentials);
+	}
 	
 	private class LabelMouseAdapter extends MouseAdapter {
 		
@@ -56,17 +68,22 @@ public class GUIAccountCustomer extends JPanel {
 	private GUIAccountCustomerQueuedMediaView queuedView;
 	private GUIAccountCustomerTransactionHistoryView transactionView;
 	private GUIAccountCustomerSupportView supportView;
-	
 	private GUIAccountCustomerAddBalanceView.IAddBalanceCallback balanceCallback;
+	private IAccountCustomerCallback customerCallback;
 	
-	public GUIAccountCustomer() {
-
-		setBounds(0,0,844,561);
+	
+	private Customer user;
+	private ArrayList<Media> media;
+	
+	public GUIAccountCustomer(HashMap<String, Observable> observableList, IAccountCustomerCallback callback) {
+		setBounds(0,0,860,550);
 		setLayout(null);
+		
+		customerCallback = callback;
 		
 		toppanel = new JPanel();
 		toppanel.setBorder(new MatteBorder(0, 0, 1, 0, (Color) new Color(0, 0, 0)));
-		toppanel.setBounds(0, 0, 844, 40);
+		toppanel.setBounds(0, 0, 860, 40);
 		toppanel.setLayout(null);
 		add(toppanel);
 		
@@ -75,8 +92,8 @@ public class GUIAccountCustomer extends JPanel {
 		account.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		toppanel.add(account);
 		
-		balance = new JLabel("Balance: 500:-");
-		balance.setBounds(692, 5, 142, 30);
+		balance = new JLabel("Balance: ");
+		balance.setBounds(670, 5, 162, 30);
 		balance.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		toppanel.add(balance);
 		
@@ -130,14 +147,13 @@ public class GUIAccountCustomer extends JPanel {
 			
 			@Override
 			public boolean onAddAmount(float amount, String[] credentials) {
-				System.out.println(amount + " " + credentials[0] + " " + credentials[1] + " " + credentials[2] + " " + credentials[3] + " " + 
-						credentials[4] + " " + credentials[5]);
-				return true;
-				
+				boolean result = customerCallback.onAddBalance(amount, credentials);
+				if(result) {
+					changeView(new GUIAccountCustomerAddBalanceView(balanceCallback));
+				}
+				return result;
 			}
 		};
-		
-		GUIAccountCustomerAddBalanceView addBalanceView = new GUIAccountCustomerAddBalanceView(balanceCallback);
 		
 		transactionView = new GUIAccountCustomerTransactionHistoryView();
 		transactionView.setLocation(190, 40);
@@ -155,7 +171,8 @@ public class GUIAccountCustomer extends JPanel {
 		contentView = rentedView;
 		add(contentView);
 		
-		
+		observableList.get("userHandler").addObserver(this);
+		observableList.get("mediaHandler").addObserver(this);
 	}
 	
 	private void changeView(JPanel newView)
@@ -165,6 +182,20 @@ public class GUIAccountCustomer extends JPanel {
 		add(newView);	
 		revalidate();
 		repaint();
+	}
+
+	@Override
+	public void Update(Object object) {
+		if(object instanceof User) {
+			user = (Customer) object;
+			balance.setText("Balance: " + String.valueOf(user.getBalance()) + ":-");
+			queuedView.updateMedia(media, user);
+			rentedView.updateMedia(media, user);
+		} else if(object instanceof ArrayList){
+			media = (ArrayList<Media>) object;
+			queuedView.updateMedia(media, user);
+			rentedView.updateMedia(media, user);
+		}
 	}
 
 }

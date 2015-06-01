@@ -2,7 +2,7 @@ package MediaPackage;
 
 import java.util.ArrayList;
 
-public class Media 
+public abstract class Media 
 {
 	private String id;
 	private String name;
@@ -58,11 +58,6 @@ public class Media
 		return queuedUsers.add(userId);
 	}
 	
-	public ArrayList<String> getQueuedUsers()
-	{
-		return queuedUsers;
-	}
-	
 	public int getUserQueuePosition(String userId)
 	{
 		return queuedUsers.indexOf(userId);
@@ -77,4 +72,6 @@ public class Media
 		
 		return true;
 	}
+	
+	public abstract MediaType getType();
 }

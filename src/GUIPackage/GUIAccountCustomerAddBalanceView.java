@@ -15,7 +15,6 @@ import javax.swing.border.LineBorder;
 @SuppressWarnings("serial")
 public class GUIAccountCustomerAddBalanceView extends JPanel {
 
-	
 	public interface IAddBalanceCallback{
 		public boolean onAddAmount(float amount, String[] credentials);
 		

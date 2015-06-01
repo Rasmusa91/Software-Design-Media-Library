@@ -113,6 +113,7 @@ public abstract class MediaHandlerState extends Observable implements IObserver
 
 		handler.setMedia(media);
 		handler.setUser(user);
+		handler.setObserverList(observers);
 		stateChangeCallback.stateChange(handler);
 	}
 	

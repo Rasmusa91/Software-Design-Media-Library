@@ -15,11 +15,6 @@ public abstract class UserHandlerState extends Observable
 		this.stateChangeCallback = stateChangeCallback;
 	}
 	
-	protected void initialize()
-	{
-		
-	}
-	
 	public boolean login(String name, String password) {
 		return false;		
 	}
@@ -44,7 +39,6 @@ public abstract class UserHandlerState extends Observable
 	protected void changeState(UserHandlerState userHandlerState)
 	{
 		userHandlerState.setUser(user);
-		userHandlerState.initialize();
 		stateChangeCallback.stateChange(userHandlerState);	
 		notifyObservers(user);
 		userHandlerState.setObserverList(observers);

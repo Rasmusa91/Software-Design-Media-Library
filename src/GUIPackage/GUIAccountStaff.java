@@ -10,10 +10,18 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.MatteBorder;
 
+import MediaPackage.MediaStatus;
+import MediaPackage.MediaType;
+import TicketPackage.Ticket;
 import DefaultPackage.Observable;
 
 @SuppressWarnings("serial")
 public class GUIAccountStaff extends JPanel {
+	
+	public interface IAccountStaffCallback {
+		public void onProcessTicket(Ticket ticket, String answer);
+		public boolean onAddMedia(String name, float price, int amount, MediaStatus status , MediaType type);
+	}
 	
 	private class LabelMouseAdapter extends MouseAdapter {
 		
@@ -24,6 +32,8 @@ public class GUIAccountStaff extends JPanel {
 			} else if(((JLabel)arg0.getSource()).getText() == "<html><u>Financial Statistics</u></html>") {
 				changeView(statsView);
 			} else if(((JLabel)arg0.getSource()).getText() == "<html><u>Process Tickets</u></html>") {
+				processView.unsubscribe();
+				processView = new GUIAccountStaffProcessTicketsView(processListCallback, observableList);
 				changeView(processView);
 			}
 		}
@@ -41,10 +51,15 @@ public class GUIAccountStaff extends JPanel {
 	private GUIAccountStaffAddMediaView addmediaView;
 	private GUIAccountStaffFinancialStatisticsView statsView;
 	private GUIAccountStaffProcessTicketsView processView;
+	private GUIAccountStaffProcessTicketsView.IProcessTicketCallback processListCallback;
+	private IAccountStaffCallback staffCallback;
+	private HashMap<String, Observable> observableList;
 	
-	public GUIAccountStaff(HashMap<String, Observable> observableList) {
+	public GUIAccountStaff(HashMap<String, Observable> observableList, IAccountStaffCallback callback) {
 		setBounds(0, 0, 844, 561);
 		setLayout(null);
+		staffCallback = callback;
+		this.observableList = observableList;
 		
 		toppanel = new JPanel();
 		toppanel.setBorder(new MatteBorder(0, 0, 1, 0, (Color) new Color(0, 0, 0)));
@@ -86,9 +101,8 @@ public class GUIAccountStaff extends JPanel {
 		addmediaView = new GUIAccountStaffAddMediaView(new GUIAccountStaffAddMediaView.IAddMediaCallback() {
 			
 			@Override
-			public boolean onAddMedia(String[] credentials) {
-				System.out.println("TESTADDINGMEDIA");
-				return true;
+			public boolean onAddMedia(String name, float price, int amount, MediaStatus status , MediaType type) {
+				return staffCallback.onAddMedia(name, price, amount, status, type);
 			}
 		});
 		addmediaView.setLocation(190, 40);
@@ -96,16 +110,16 @@ public class GUIAccountStaff extends JPanel {
 		statsView = new GUIAccountStaffFinancialStatisticsView(observableList);
 		statsView.setLocation(190, 40);
 		
-		processView = new GUIAccountStaffProcessTicketsView(new GUIAccountStaffProcessTicketsView.IProcessTicketCallback() {
+		processListCallback = new GUIAccountStaffProcessTicketsView.IProcessTicketCallback() {
 			
 			@Override
-			public void onProcessTicket() {
-				// TODO Auto-generated method stub
-				System.out.println("TestProcessViewINGUIAccountStaff");
-				
+			public void onProcessTicket(Ticket ticket, String answer) {
+				staffCallback.onProcessTicket(ticket, answer);
 			}
-		});
-		processView.setLocation(190, 40);
+		};
+		
+		processView = new GUIAccountStaffProcessTicketsView(processListCallback, observableList);
+		
 		
 		contentView = addmediaView;
 		add(contentView);

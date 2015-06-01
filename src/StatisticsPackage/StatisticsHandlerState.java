@@ -35,7 +35,9 @@ public abstract class StatisticsHandlerState extends Observable implements IObse
 			String customerId = hashMap.get("userId").toString();
 			float value = (float) ((double) hashMap.get("amount"));
 			TransactionType type = (value > 0 ? TransactionType.Deposition : TransactionType.Withdrawal);
-						
+			if(value < 0) {
+				value *= -1;
+			}		
 			Date date = null;
 			try {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -77,8 +79,10 @@ public abstract class StatisticsHandlerState extends Observable implements IObse
 		}
 
 		handler.setUser(user);
+		handler.setObserverList(observers);
 		handler.initialize();
 		stateChangeCallback.stateChange(handler);
+		
 		
 	}
 	

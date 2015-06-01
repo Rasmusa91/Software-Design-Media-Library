@@ -2,12 +2,15 @@ package GUIPackage;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
+import TicketPackage.Ticket;
 
 
 @SuppressWarnings("serial")
@@ -18,7 +21,6 @@ public class GUIAccountStaffProcessTicketsOverView extends JPanel {
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
 			if(arg0.getClickCount() == 2) {
-				System.out.println(ticketList.getSelectedValue());
 				selectCallback.onSelectCallback(ticketList.getSelectedValue());
 			}
 		}
@@ -36,7 +38,7 @@ public class GUIAccountStaffProcessTicketsOverView extends JPanel {
 	
 	private IOnSelectCallback selectCallback;
 	
-	public GUIAccountStaffProcessTicketsOverView(IOnSelectCallback callback) {
+	public GUIAccountStaffProcessTicketsOverView(IOnSelectCallback callback, ArrayList<Ticket> tickets) {
 		selectCallback = callback;
 		setBounds(0,0,654, 471);
 		setLayout(null);
@@ -47,8 +49,6 @@ public class GUIAccountStaffProcessTicketsOverView extends JPanel {
 		add(processtickets);
 		
 		ticketData = new Vector<String>();
-		ticketData.add("SubmittedTicketName");
-		ticketData.add("SubmittedTicketName2");
 		
 		ticketList = new JList<String>();
 		ticketList.setListData(ticketData);
@@ -57,6 +57,13 @@ public class GUIAccountStaffProcessTicketsOverView extends JPanel {
 		scroll = new JScrollPane(ticketList);
 		scroll.setBounds(10, 50, 633, 410);
 		add(scroll);
+	}
+	
+	public void updateTickets(ArrayList<Ticket> tickets) {
+		ticketData.clear();
+		for (Ticket ticket : tickets) {
+			ticketData.add("Ticket: " + ticket.getId());
+		}
 	}
 	
 

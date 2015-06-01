@@ -8,4 +8,9 @@ public class EBook extends Media
 			MediaStatus status, ArrayList<String> queuedUsers) {
 		super(id, name, price, amount, status, queuedUsers);
 	}
+
+	@Override
+	public MediaType getType() {
+		return MediaType.EBook;
+	}
 }

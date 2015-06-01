@@ -1,11 +1,17 @@
 package GUIPackage;
 import java.awt.Font;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
+import MediaPackage.Media;
+import UserPackage.Customer;
+import UserPackage.RentedMedia;
+import UserPackage.User;
 
 
 public class GUIAccountCustomerRentedMediaView extends JPanel {
@@ -35,7 +41,19 @@ public class GUIAccountCustomerRentedMediaView extends JPanel {
 		scroll = new JScrollPane(rentedList);
 		scroll.setBounds(10, 50, 635, 410);
  		add(scroll);
-		
+	}
+	
+	public void updateMedia(ArrayList<Media> media, Customer user) {
+		if(user != null) {
+			rentedData.clear();
+			for (Media m : media) {
+				for (RentedMedia m2 : user.getRentedMedia()) {
+					if(m.getId().equals(m2.getMediaID())) {
+						rentedData.add(m.getName());
+					}
+				}
+			}
+		}
 	}
 
 }

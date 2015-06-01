@@ -6,10 +6,15 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+
+import MediaPackage.MediaStatus;
+import MediaPackage.MediaType;
 
 
 @SuppressWarnings("serial")
@@ -19,40 +24,51 @@ public class GUIAccountStaffAddMediaView extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(!type.getText().equals("") && 
-					!name.getText().equals("") && 
+			if(!name.getText().equals("") && 
 					!price.getText().equals("") &&
 					!amount.getText().equals("")) {
 				try {
-					Float.valueOf(price.getText());
-					Float.valueOf(amount.getText());
+					MediaStatus status;
+					if(statusbox.isSelected()) {
+						status = MediaStatus.InStock;
+					} else {
+						status = MediaStatus.UnavailableIndefinitive;
+					}
 					
-					String[] amedia = {name.getText() ,price.getText(), amount.getText(), type.getText()};
-					if(addMediaCallback.onAddMedia(amedia)) {
-						error.setText("");
+					if(addMediaCallback.onAddMedia(name.getText() ,Float.valueOf(price.getText()), Integer.valueOf(amount.getText()), status, (MediaType) type.getSelectedItem())) {
+						error.setText("Media has been added");
+						name.setText("");
+						price.setText("");
+						amount.setText("");
+						error.setForeground(Color.GREEN);
 					} else {
 						error.setText("Media not added.");
+						error.setForeground(Color.RED);
 					}
 				} catch(Exception e1) {
 					error.setText("Price and amount needs to be numbers.");
+					error.setForeground(Color.RED);
 				}
 				
 			} else {
 				error.setText("Empty fields not allowed.");
+				error.setForeground(Color.RED);
 			}
 		}
 	}
 	
 	public interface IAddMediaCallback{
-		public boolean onAddMedia(String[] credentials);
+		public boolean onAddMedia(String name, float price, int amount, MediaStatus status , MediaType type);
 	}
 	
 	private JLabel addmedia;
 	
-	private JTextField type;
+	private JComboBox<MediaType> type;
+	
 	private JTextField name;
 	private JTextField price;
 	private JTextField amount;
+	private JCheckBox statusbox;
 	private IAddMediaCallback addMediaCallback;
 	
 	private JLabel error;
@@ -70,8 +86,10 @@ public class GUIAccountStaffAddMediaView extends JPanel {
 		
 		LineBorder border = new LineBorder ( Color.BLACK, 1);
 		
-		type = new JTextField();
-		type.setColumns(10);
+		type = new JComboBox<MediaType>();
+		for (MediaType mediaType : MediaType.values()) {
+			 type.addItem(mediaType);
+		}
 		type.setBounds(10, 50, 634, 40);
 		type.setBackground(new Color(238,238,238));
 		type.setBorder(BorderFactory.createTitledBorder(border, "Type"));
@@ -98,6 +116,11 @@ public class GUIAccountStaffAddMediaView extends JPanel {
 		amount.setBounds(10, 170, 634, 40);
 		add(amount);
 		
+		statusbox = new JCheckBox("Available");
+		statusbox.setBounds(10, 220, 100, 40);
+		statusbox.setSelected(true);
+		add(statusbox);
+		
 		SubmitListener submitListener = new SubmitListener();
 		
 		JButton submit = new JButton("Submit");
@@ -107,7 +130,7 @@ public class GUIAccountStaffAddMediaView extends JPanel {
 		
 		error = new JLabel();
 		error.setForeground(Color.RED);
-		error.setBounds(10, 220, 250, 25);
+		error.setBounds(10, 270, 250, 25);
 		add(error);
 	}
 }

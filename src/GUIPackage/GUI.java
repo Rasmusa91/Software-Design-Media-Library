@@ -7,6 +7,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import MediaPackage.Media;
+import MediaPackage.MediaStatus;
+import MediaPackage.MediaType;
+import TicketPackage.Ticket;
 import DefaultPackage.*;
 
 
@@ -74,6 +78,27 @@ public class GUI extends JFrame {
 			public boolean onRegister(String name, String pw) {
 				return guiCallback.onSignup(name, pw);
 			}
+
+			@Override
+			public boolean onProcessTicket(Ticket ticket, String answer) {
+				return guiCallback.onProcessTicket(ticket, answer);
+			}
+
+			@Override
+			public boolean onAddMedia(String name, float price, int amount, MediaStatus status, MediaType type) {
+				return guiCallback.onAddMedia(name, price, amount, status, type);
+			}
+
+			@Override
+			public boolean onAddBalance(float amount, String[] credentials) {
+				return guiCallback.onAddFunds(amount, credentials);
+			}
+
+			@Override
+			public boolean onRent(Media media) {
+				return guiCallback.onRentMedia(media);
+			}
+			
 		}, observableList);
 		mainView.setLocation(0, 50);
 		contentPane.add(mainView);

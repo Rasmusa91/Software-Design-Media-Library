@@ -15,7 +15,7 @@ public class TicketHandlerStateStaff extends TicketHandlerState
 	@Override
 	protected void initialize()
 	{
-		ArrayList<HashMap<String, Object>> result = DatabaseHandler.executeQueryAndFetch("SELECT * FROM Tickets");	
+		ArrayList<HashMap<String, Object>> result = DatabaseHandler.executeQueryAndFetch("SELECT * FROM Tickets WHERE staffMessage IS NULL");	
 		initializeTickets(result);
 	}
 	
@@ -27,7 +27,8 @@ public class TicketHandlerStateStaff extends TicketHandlerState
 		DatabaseHandler.executeQuery("UPDATE Tickets "
 				+ "SET staffId = '" + user.getId() + "', staffMessage = '" + response + "' "
 				+ "WHERE id = '" + ticket.getId() + "'");
-		
+		tickets.remove(ticket);
+		notifyObservers(tickets);
 		return true;
 	}	
 }

@@ -27,7 +27,7 @@ public class MediaHandlerStateStaff extends MediaHandlerState {
 		if(type == MediaType.AudioBook) {
 			success = media.add(new AudioBook(lastID, name, price, amount, status, null));
 		}
-		else if(type == MediaType.AudioBook) {
+		else if(type == MediaType.EBook) {
 			success = media.add(new EBook(lastID, name, price, amount, status, null));
 		}
 		

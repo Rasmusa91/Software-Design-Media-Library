@@ -14,6 +14,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.JTextPane;
 import javax.swing.JFormattedTextField;
 
+import TicketPackage.Ticket;
+
 import java.awt.TextArea;
 
 
@@ -42,7 +44,6 @@ public class GUIAccountStaffProcessTicketsSingle extends JPanel {
 	
 	private JLabel processtickets;
 	private JLabel name;
-	private JLabel date;
 	private JEditorPane userMessage;
 	private JEditorPane answer;
 	
@@ -50,7 +51,7 @@ public class GUIAccountStaffProcessTicketsSingle extends JPanel {
 	private IProcessTicketCallback processCallback;
 	
 	
-	public GUIAccountStaffProcessTicketsSingle(IProcessTicketCallback callback) {
+	public GUIAccountStaffProcessTicketsSingle(IProcessTicketCallback callback, Ticket ticket) {
 		setBounds(0,0,654,471);
 		setLayout(null);
 		processCallback = callback;
@@ -60,22 +61,18 @@ public class GUIAccountStaffProcessTicketsSingle extends JPanel {
 		processtickets.setBounds(10, 10, 150, 25);
 		add(processtickets);
 		
-		name = new JLabel("Rasmus.a-91@hotmail.com");
+		name = new JLabel("Ticket: " + ticket.getId());
 		name.setBounds(10, 35, 500, 25);
 		add(name);
-		
-		date = new JLabel("2015-05-31 01:10");
-		date.setBounds(10, 50, 500, 25);
-		add(date);
 		
 		LineBorder border = new LineBorder ( Color.BLACK, 1);
 		
 		userMessage = new JEditorPane();
+		userMessage.setText(ticket.getCustomerMessage());
 		userMessage.setBounds(10, 71, 634, 155);
 		userMessage.setBorder(BorderFactory.createTitledBorder(border, "Message"));
 		userMessage.setBackground(new Color(238,238,238));
 		userMessage.setEditable(false);
-		userMessage.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ut fringilla justo. Nam egestas mauris quis tortor aliquet sagittis. Donec vestibulum iaculis luctus. Nullam pellentesque euismod velit, nec interdum lacus porttitor sit amet. Vivamus sagittis sapien fermentum auctor vestibulum. Nulla tincidunt, tellus sagittis mollis maximus, lacus velit facilisis mauris, vitae ultrices sapien magna aliquam nisl. Curabitur enim metus, dapibus quis aliquet id, elementum non dolor. Aliquam mollis risus metus. Vestibulum id consectetur odio, a suscipit nisl. Pellentesque a egestas lectus. Integer rhoncus tempus diam id dignissim.");
 		add(userMessage);
 		
 		answer = new JEditorPane();

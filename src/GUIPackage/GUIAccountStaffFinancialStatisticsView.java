@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import DefaultPackage.IObserver;
 import DefaultPackage.Observable;
 import StatisticsPackage.Transaction;
+import StatisticsPackage.TransactionType;
 
 
 @SuppressWarnings("serial")
@@ -25,7 +26,6 @@ public class GUIAccountStaffFinancialStatisticsView extends JPanel implements IO
 			String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"};
 			int monthNr = 1;
 			float monthSum = 0;
-			System.out.println(((JLabel)arg0.getSource()).getText());
 			for(int i = 0; i < 12; i++) {
 				String month = "<html><u>" + months[i] + "</u></html>";
 				if(((JLabel)arg0.getSource()).getText().equals(month)) {
@@ -35,9 +35,10 @@ public class GUIAccountStaffFinancialStatisticsView extends JPanel implements IO
 			}
 			SimpleDateFormat dateFormat = new SimpleDateFormat("MM");
 			for (Transaction transaction : transactions) {
-				System.out.println(transaction.toString());
 				if(Integer.valueOf(dateFormat.format(transaction.getDate())) == monthNr) {
-					monthSum += transaction.getValue();
+					if(transaction.getType() == TransactionType.Deposition) {
+						monthSum += transaction.getValue();
+					}
 				}
 			}
 			sum.setText("Total Sum: " + String.valueOf(monthSum) + ":-");
@@ -99,9 +100,7 @@ public class GUIAccountStaffFinancialStatisticsView extends JPanel implements IO
 	@SuppressWarnings("unchecked")
 	@Override
 	public void Update(Object object) {
-		
 		transactions = (ArrayList<Transaction>) object;
-		System.out.println(transactions.toString());
 	}
 
 }

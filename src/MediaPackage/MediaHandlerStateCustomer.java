@@ -32,12 +32,13 @@ public class MediaHandlerStateCustomer extends MediaHandlerState
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 			String dateString = dateFormat.format(date);			
 			
-			((Customer) user).editBalance(media.getPrice() * -1);
 			RentedMedia rm = ((Customer) user).addRentedMedia(media.getId(), date);
 			
 			DatabaseHandler.executeQuery("INSERT INTO RentedMedia "
 					+ "(userId, mediaId, expirationDate) "
 					+ "VALUES ('" + user.getId() + "', '" + rm.getMediaID()  + "', '" + dateString + "')");
+			
+			DatabaseHandler.executeQuery("UPDATE Media SET amount = amount - 1 WHERE id = '"+ media.getId() +"'");
 			
 			success = true;
 		}
